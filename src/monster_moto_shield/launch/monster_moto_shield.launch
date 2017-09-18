@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="monster_moto_shield" type="node.py" name="monster_moto_shield_node">
+  </node>
+</launch>

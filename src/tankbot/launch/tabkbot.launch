@@ -2,5 +2,7 @@
   <group>
     <include file="$(find teleop_twist_joy)/launch/teleop.launch">
     </include>
+    <include file="$(find monster_moto_shield)/launch/monster_moto_shield.launch">
+    </include>
   </group>
 </launch>
