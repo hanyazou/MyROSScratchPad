@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import rospy
+import math
 from monster_moto_shield import monster_moto_shield
 from geometry_msgs.msg import Twist
 
@@ -10,18 +11,23 @@ class node():
         self.mms = monster_moto_shield()
 
     def cb_twist(self, msg):
-        print msg
+        # print msg
         cmd_vel = msg
-        r_speed = cmd_vel.linear.x + cmd_vel.angular.z*self.TREAD/2
-        l_speed = cmd_vel.linear.x - cmd_vel.angular.z*self.TREAD/2
-        r_speed /= 1000
-        l_speed /= 1000
-        print l_speed, r_speed
-        if r_speed < 0:
+        linear = cmd_vel.linear.x / -23000
+        angular = cmd_vel.angular.z / -23000
+        r_speed = linear + angular*self.TREAD/2 * 20
+        l_speed = linear - angular*self.TREAD/2 * 20
+        print '%5.2f %5.2f' % (l_speed, r_speed)
+        if abs(r_speed) < 0.1:
+            self.mms.stop(self.mms.RIGHT)
+        elif r_speed < 0:
             self.mms.start(self.mms.RIGHT, self.mms.BACKWARD, -r_speed)
         else:
             self.mms.start(self.mms.RIGHT, self.mms.FORWARD, r_speed)
-        if l_speed < 0:
+
+        if abs(l_speed) < 0.1:
+            self.mms.stop(self.mms.LEFT)
+        elif l_speed < 0:
             self.mms.start(self.mms.LEFT, self.mms.BACKWARD, -l_speed)
         else:
             self.mms.start(self.mms.LEFT, self.mms.FORWARD, l_speed)
